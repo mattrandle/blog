@@ -1,0 +1,64 @@
+---
+title: Containers vs Serverless
+date: '2022-03-20'
+tags: ['Azure', 'Serverless', 'Containers']
+draft: false
+summary: Containers or serverless functions on Azure ?
+images: []
+layout: PostLayout
+canonicalUrl: containers-vs-serverless
+---
+
+# Microservice Hosting
+
+# Overview
+
+Broadly speaking, there are two main approaches to writing microservices for Azure
+
+1. Containers manged by a orchestration service such as AKS or ACS
+2. Azure functions
+
+There are trade offs to each approach...
+
+# Containers
+
+**Cloud agnostic**  
+In general, containers will be easier to migrate (or host as part of a multi-cloud setup) than serverless. This is, of course, never straightforward because unless you deliberately
+set out to minimise platform dependencies from the start, you will probably be using multiple Azure PaaS services such as Key Vault, AD, Pipelines, etc. However, I think it is fair to
+say that it will always be easier to move an application in a container to a different host than it is to migrate, or example, Azure functions to AWS Lambda, which would be a complete rewrite.
+So comparatively, with containers, you are certainly reducing vendor lock-in.
+
+**Legacy applications**  
+It is easier to migrate existing applications to containers. You can wrap an existing API in a container and update the build/deploy process.
+It will be a total rewrite (granted with a lot of CTRL-C, CTRL-V) to go serverless.
+
+**Development**  
+It is less of a learning curve with containers than serverless which is an entirely different model. It is also easier to spin up local dev environments that contain
+multiple dependencies with containers.
+
+Also, In the .NET world, decent tooling exists for contract first development with ASP.NET Core that allows you to auto-generate APIs from an Open API spec as part of
+the build process. At time of writing, no such tooling exists for for Azure functions.
+
+# Serverless
+
+**Cost**  
+With container orchestration, you have to pay for each hosting node - which nearly always has to be over provisioned to cope with peaks which in turn results in
+unused capacity and unnecessary costs. With the consumption plan available in Azure functions, you are only paying for the number of invocations/requests.
+Overall, costs are better aligned to usage which includes scaling all the way down to 0. Its obviously use case dependent but in general serverless is going to be
+cheaper than running a production AKS cluster with 3+ worker nodes.
+
+**Integration**  
+Azure Functions are easy to integrate to many types of Azure services using declarative input/output bindings. This is especially useful for event based microservices as
+you have triggers for the plethora of Azure eventing systems (Service Bus, Event Hubs, Event Grid).
+
+**Scaling**  
+Auto scaling based on throughput is trivial with Azure functions. Although this is possible with AKS, in my experience at least, it is much harder to setup and maintain.
+
+# Conclusion
+
+If you are starting a greenfield development, and don't have a requirement for massive scale or need to go multi-cloud, I believe Azure functions are the way to go. The ease of integrating with
+other services and simplified deployment and hosting allow you to quickly develop and deploy solutions.
+
+If you are migrating to cloud from on premise, anticipate huge scale, or want to remain somewhat cloud agnostic, containers are a better solution.
+
+Of course the argument is a bit of a false dichotomy as a hybrid approach is often required.
