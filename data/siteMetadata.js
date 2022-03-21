@@ -1,7 +1,7 @@
 const siteMetadata = {
   title: 'Matt Randle Personal Blog',
   author: 'Matthew Randle',
-  headerTitle: 'MattRandle',
+  headerTitle: '',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
   theme: 'system', // system, dark or light
